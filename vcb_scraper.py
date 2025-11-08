@@ -455,7 +455,6 @@ class VCBScraper:
             
             filtered_links: List[str] = []
             seen_urls = set()
-            excluded_ids = {138, 17612, 3551, 16986}
             skipped_by_tag = 0
             skipped_duplicates = 0
             
@@ -467,9 +466,6 @@ class VCBScraper:
                     return
                 post_id = re.search(r'/archives/(\d+)', href)
                 if not post_id:
-                    return
-                pid = int(post_id.group(1))
-                if pid in excluded_ids:
                     return
                 full_url = urljoin(self.base_url, href)
                 if full_url in seen_urls:
