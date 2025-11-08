@@ -1,0 +1,67 @@
+# 生成的数据文件
+vcb_data.db
+*.db
+vcb_data.xlsx
+vcb_data*.xlsx
+*.xlsx
+
+# 日志文件
+vcb_scraper.log
+*.log
+
+CHANGELOG.md
+
+# 断点和失败记录
+scraper_checkpoint.json
+scraper_failures.json
+
+# Python 相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 临时文件
+*.tmp
+*.bak
+*.cache
+
+# 忽略所有文件夹
+# 注意：这会忽略所有一级文件夹，如果需要保留某些文件夹，使用 !文件夹名/ 来排除
+*/
+# 或者使用 **/ 来忽略所有层级的文件夹（包括子文件夹）
+# **/
+
+# 忽略日期格式的文件夹（如 25-11-08-19-36/）
+[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
