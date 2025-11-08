@@ -135,6 +135,8 @@ class VCBScraper:
 
     def _bootstrap_from_previous_run(self):
         """从最近一次运行复制必要的产物（如数据库）"""
+        if not self.update_mode:
+            return
         if not self.previous_run_dir:
             return
         prev_db = os.path.join(self.previous_run_dir, 'vcb_data.db')

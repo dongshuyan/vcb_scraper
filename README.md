@@ -226,6 +226,8 @@ python vcb_scraper.py --max-pages 50 --workers 4 --window-size 50
 
    程序会自动寻找最近一次的 `scraper_failures.json` 并仅处理这些帖子。
 
+6. **历史数据库复用**：只有在 `--update` 模式下才会自动复制最近一次运行生成的 `vcb_data.db`，用于判断哪些帖子已存在。普通完整爬取会从全新的数据库开始，以便补齐以往缺失字段。
+
 5. **窗口大小**：根据系统内存调整 `--window-size`
    - 内存充足：100-200
    - 内存一般：50-100
