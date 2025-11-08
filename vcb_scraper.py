@@ -456,8 +456,11 @@ class VCBScraper:
             filtered_links: List[str] = []
             seen_urls = set()
             excluded_ids = {138, 17612, 3551, 16986}
+            skipped_by_tag = 0
+            skipped_duplicates = 0
             
             def register_link(href: str, block):
+                nonlocal skipped_by_tag, skipped_duplicates
                 if not href or '/archives/' not in href:
                     return
                 if 'comment' in href:
@@ -470,6 +473,7 @@ class VCBScraper:
                     return
                 full_url = urljoin(self.base_url, href)
                 if full_url in seen_urls:
+                    skipped_duplicates += 1
                     return
                 
                 listing_html = self._html_snippet(block)
@@ -478,6 +482,7 @@ class VCBScraper:
                 
                 if self._should_skip_url(full_url, log_skip=True):
                     seen_urls.add(full_url)
+                    skipped_by_tag += 1
                     return
                 
                 filtered_links.append(href)
@@ -493,16 +498,25 @@ class VCBScraper:
                 if link and link.get('href'):
                     register_link(link['href'], article)
             
-            # 方法2: 直接查找所有包含 /archives/ 的链接（备用）
-            all_links = soup.find_all('a', href=re.compile(r'/archives/\d+'))
-            for link in all_links:
-                href = link.get('href')
-                if not href:
-                    continue
-                block = link.find_parent('div', class_='article') or link.find_parent('section')
-                register_link(href, block)
+            # 方法2: 备用模式，仅在正文解析失败时使用
+            if not filtered_links:
+                article_container = soup.select('#article-list')
+                search_scope = article_container[0] if article_container else soup
+                all_links = search_scope.find_all('a', href=re.compile(r'/archives/\d+'))
+                for link in all_links:
+                    href = link.get('href')
+                    if not href:
+                        continue
+                    block = link.find_parent('div', class_='article') or link.find_parent('section')
+                    register_link(href, block)
             
-            logger.info(f"第 {page_num} 页找到 {len(filtered_links)} 个帖子")
+            extra_info = []
+            if skipped_by_tag:
+                extra_info.append(f"跳过黑名单 {skipped_by_tag} 个")
+            if skipped_duplicates:
+                extra_info.append(f"重复 {skipped_duplicates} 个")
+            suffix = f"（{', '.join(extra_info)}）" if extra_info else ""
+            logger.info(f"第 {page_num} 页找到 {len(filtered_links)} 个帖子{suffix}")
             return filtered_links
             
         except Exception as e:
